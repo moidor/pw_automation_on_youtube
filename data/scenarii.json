@@ -1,0 +1,12 @@
+[
+  {
+    "search": "baleine à bosse",
+    "videoTitle": "Le chant de la baleine à bosse",
+    "actions": [
+      { "type": "pause" },
+      { "type": "mute" },
+      { "type": "setQuality", "value": "720p" },
+      { "type": "fullscreen" }
+    ]
+  }
+]

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
+import { fileReader, jsonFileReading } from '../fixtures/file.fixture';
 
 test('has title', async ({ page }) => {
   await page.goto('https://playwright.dev/');
@@ -33,3 +34,43 @@ test('user searching on YouTube', async ({ page }) => {
   // await page.keyboard.press('Enter');
 });
 
+fileReader('use data from text file', async ({ fileLines }) => {
+  console.log(fileLines);
+
+  // Exemple concret
+  for (const line of fileLines) {
+    console.log('Traitement:', line);
+  }
+});
+
+jsonFileReading('use data from JSON file', async ({ page, scenarios }) => {
+  const home = new YouTubeHomePage(page);
+  const video = new YouTubeVideoPage(page);
+
+  for (const scenario of scenarios) {
+    await home.goto();
+    await home.searchFor(scenario.search);
+
+    await video.openFirstVideo();
+
+    for (const action of scenario.actions) {
+      switch (action.type) {
+        case 'pause':
+          await video.pause();
+          break;
+        case 'play':
+          await video.play();
+          break;
+        case 'mute':
+          await video.mute();
+          break;
+        case 'fullscreen':
+          await video.fullscreen();
+          break;
+        case 'setQuality':
+          await video.setQuality(action.value);
+          break;
+      }
+    }
+  }
+});
