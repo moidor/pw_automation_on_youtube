@@ -1,5 +1,4 @@
 import { expect, Page } from '@playwright/test';
-import { setTimeout } from 'node:timers/promises';
 
 export class YouTubeVideoPage{
   constructor(private page: Page) {}
@@ -41,7 +40,7 @@ export class YouTubeVideoPage{
 
   async pause() {
     // await this.page.getByRole('button', { name: 'Pause' }).click();
-    await this.page.waitForTimeout(5000);
+    // await this.page.waitForTimeout(5000);
     // await this.page.getByRole('button', { name: 'Play keyboard shortcut k' }).click();
     await this.page.keyboard.press('k');
   }

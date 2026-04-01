@@ -2,9 +2,10 @@
   {
     "search": "baleine à bosse",
     "videoTitle": "Le chant de la baleine à bosse",
+    "duration": "2:23",
     "actions": [
-      { "type": "pause" },
       { "type": "mute" },
+      { "type": "pause" },
       { "type": "setQuality", "value": "720p" },
       { "type": "fullscreen" }
     ]

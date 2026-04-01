@@ -27,6 +27,7 @@ type Action =
 type Scenario = {
   search: string;
   videoTitle: string;
+  duration: string;
   actions: Action[];
 };
 
