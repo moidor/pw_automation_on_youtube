@@ -34,25 +34,23 @@ export class YouTubeVideoPage{
     await randomObject.click();
   }
 
-  async play() {
-    await this.page.getByRole('button', { name: 'Play' }).click();
-  }
-
-  async pause() {
-    // await this.page.getByRole('button', { name: 'Pause' }).click();
-    // await this.page.waitForTimeout(5000);
-    // await this.page.getByRole('button', { name: 'Play keyboard shortcut k' }).click();
-    await this.page.keyboard.press('k');
-  }
-
   async setQuality(quality: string) {
     await this.page.getByLabel('YouTube Video Player').getByLabel('Settings').click();
     await this.page.getByRole('menuitem', { name: 'Quality' }).locator('div').first().click();
     await this.page.getByText(quality).click();
   }
 
-  async autoplay() {
-    await this.page.getByRole('button', { name: 'Autoplay' }).click();
+  async timeout(timeoutValue: number) {
+    await this.page.waitForTimeout(timeoutValue);
+    console.log(`Timeout of ${timeoutValue} seconds.`);
+  }
+
+  async togglePlayPause(action: string) {
+    if (action === 'play') {
+      await this.page.keyboard.press('k');
+    } else if (action === 'pause') {
+      await this.page.keyboard.press('k');
+    }
   }
 
 }

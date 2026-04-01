@@ -21,11 +21,9 @@ jsonFileReading('use data from JSON file', async ({ page, scenarii }) => {
   const executeActions = async (video: YouTubeVideoPage, actions: any) => {
       for (const action of actions) {
         switch (action.type) {
-          case 'pause':
-            await video.pause();
-            break;
           case 'play':
-            await video.play();
+          case 'pause':
+            await video.togglePlayPause(action.type);
             break;
           case 'mute':
             await video.mute();
@@ -36,6 +34,8 @@ jsonFileReading('use data from JSON file', async ({ page, scenarii }) => {
           case 'setQuality':
             await video.setQuality(action.value);
             break;
+          case 'timeout':
+            await video.timeout(action.value);
         }
       }
     };
@@ -54,7 +54,7 @@ jsonFileReading('use data from JSON file', async ({ page, scenarii }) => {
         skipAdButton.waitFor({ state: 'visible', timeout: 30000 }),
       ]);
     } catch {
-      console.log('Ni durée vidéo ni pub détectée dans le délai');
+      console.log('None detected video or ad.');
     }
 
     if (await videoDurationSection.isVisible()) {

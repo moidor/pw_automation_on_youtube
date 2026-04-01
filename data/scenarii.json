@@ -5,9 +5,11 @@
     "duration": "2:23",
     "actions": [
       { "type": "mute" },
+      { "type": "timeout", "value": 10000 },
       { "type": "pause" },
       { "type": "setQuality", "value": "720p" },
-      { "type": "fullscreen" }
+      { "type": "fullscreen" },
+      { "type": "play" }
     ]
   }
 ]
