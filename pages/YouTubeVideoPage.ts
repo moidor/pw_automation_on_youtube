@@ -1,7 +1,34 @@
-import { expect, Page } from '@playwright/test';
+import { Browser, expect, Page } from '@playwright/test';
+import { Context } from 'vm';
 
 export class YouTubeVideoPage{
-  constructor(private page: Page) {}
+  constructor(private page: Page, private browser: Browser) {}
+
+  async durationToMilliseconds(duration: string) {
+    const parts = duration.split(':').map(Number);
+
+    if (parts.some(Number.isNaN)) {
+      throw new Error(`Invalid duration format: ${duration}`);
+    }
+
+    let totalSeconds = 0;
+
+    if (parts.length === 2) {
+      const [minutes, seconds] = parts;
+      totalSeconds = minutes * 60 + seconds;
+    } else if (parts.length === 3) {
+      const [hours, minutes, seconds] = parts;
+      totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    } else {
+      throw new Error(`Unsupported duration format: ${duration}`);
+    }
+
+    return totalSeconds * 1000;
+  }
+
+  async closeBrowser() {
+    await this.browser.close();
+  }
 
   async fullscreen() {
     await this.page.keyboard.press('f');
@@ -51,6 +78,10 @@ export class YouTubeVideoPage{
     } else if (action === 'pause') {
       await this.page.keyboard.press('k');
     }
+  }
+
+  async whenStoppingVideo() {
+
   }
 
 }
