@@ -48,6 +48,7 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
     await home.goto();
     await home.searchFor(scenario.search);
     video.expectVideoToBePresentInResults(scenario.videoTitle);
+    video.fullAssertionsAboutUrl();
     await video.openFirstVideo(scenario.videoTitle);
     
 

@@ -98,7 +98,7 @@ export class YouTubeVideoPage{
   }
 
   // ASSERTIONS :
-  // Assertions about checking the presence of searched video on the results page
+  // Assertions about checking the presence of the searched video from data on the YouTube results page
   async expectVideoToBePresentInResults(videoTitle: string) {
     const videoCard = this.page.getByTitle(videoTitle);
     await expect(videoCard).toBeVisible();
@@ -120,8 +120,13 @@ export class YouTubeVideoPage{
   }
 
   // Assertions about the URL containing the search query and results string
+  async fullAssertionsAboutUrl() {
+    await this.expectResultsPage();
+    await this.expectSearchTermInUrl();
+  }
+
   async expectResultsPage() {
-    await expect(this.page).toHaveURL('/\/results/');
+    await expect(this.page).toHaveURL(/results/);
   }
 
   async expectSearchTermInUrl() {
