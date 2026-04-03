@@ -40,24 +40,28 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
             break;
           case 'timeout':
             await video.timeout(action.value);
-        }
-      }
-    };
+            break;
+    }};
+  }
 
   for (const scenario of scenarii) {
     await home.goto();
     await home.searchFor(scenario.search);
+    video.expectVideoToBePresentInResults(scenario.videoTitle);
     await video.openFirstVideo(scenario.videoTitle);
-    video.expectPlayerVisible();
-    video.expectVideoTitleVisible(scenario.videoTitle);
+    
 
-    const videoDurationSection = page.getByText(`:00 / ${scenario.duration}Live`);
+    // MEME FONCTION MAIS AVEC UN MOT DANS LE JDD JSON POUR APPLIQUER UN TEMPS DE LECTURE DE 21 SECONDES (TESTER PUB 15 SECS DE SUBWAY)
+    // const videoDurationSection = page.getByText(`:00 / ${scenario.duration}Live`);
+    const videoDurationSection = page.locator('#movie_player').getByText(scenario.duration);
     const skipAdButton = page.getByRole('button', { name: 'Skip', exact: true });
     // const twoAdsdisplay = page.getByLabel('Sponsorisé', { exact: true });
 
     // Management of the ad before the selected video
     try {
       await Promise.race([
+        video.expectPlayerVisible(),
+        video.expectVideoTitleVisible(scenario.videoTitle),
         videoDurationSection.waitFor({ state: 'visible', timeout: 30000 }),
         skipAdButton.waitFor({ state: 'visible', timeout: 30000 }),
       ]);
@@ -65,36 +69,36 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
       console.log('None detected video or ad.');
     }
 
-    // Management of the displayed error message on the video which stops it
+    // Management of the displayed error message on the video which stops it or lets it continue with the method ".checkVideoError()"
     // Taking a snapshot (to implement later)
-      // throw new Error(`The following error message appeared and stopped the video watching : ${errorMessage}`);
     const videoDurationInMs = video.durationToMilliseconds(scenario.duration);
     // const errorMessage = page.getByText('Something went wrong. Refresh');
 
-    // important : le test doit durer plus longtemps que la vidéo
+    // Important : the test must last longer than the video
     test.setTimeout(await videoDurationInMs + 30000);
+    const errorMessage = page.getByText('Something went wrong. Refresh');
     const watchForErrorDuringVideo = async (videoDurationInMs: number) => {
-      const errorMessage = page.getByText('Something went wrong. Refresh');
-
       try {
         await errorMessage.waitFor({
           state: 'visible',
           timeout: videoDurationInMs,
         });
-
-        throw new Error('Error message displayed on the video player...');
+        video.checkVideoError(page, scenario.videoTitle);
+        // throw new Error('Error message displayed on the video player...');
       } catch (error) {
         if (error instanceof errors.TimeoutError) {
           return;
         }
         throw error;
       }
-  };
+    };
 
-    // Execution of the actions with the error message watcher
+    // Execution of the actions with the error message watcher and a 5-second timeout to make the video duration section visible
+    await page.waitForTimeout(5000);
     if (await videoDurationSection.isVisible()) {
       // video.expectResultsPage();
-      // video.expectSearchTermInUrl();      
+      // video.expectSearchTermInUrl();
+      console.log('The video duration section in the player is visible.');
       await Promise.all([
         executeActions(video, scenario.actions),
         watchForErrorDuringVideo(await videoDurationInMs)
@@ -102,7 +106,9 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
     } else if (await skipAdButton.isVisible()) {
       // video.expectResultsPage();
       // video.expectSearchTermInUrl();
+      console.log('The skip button is visible and is going to be clicked.');
       await skipAdButton.click();
+      await expect(skipAdButton).toBeHidden({ timeout: 2000 });
       await Promise.all([
         executeActions(video, scenario.actions),
         watchForErrorDuringVideo(await videoDurationInMs)
@@ -116,5 +122,6 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
         watchForErrorDuringVideo(await videoDurationInMs)
       ]);
     }
+    // await expect(errorMessage).toBeHidden();
   }
 });

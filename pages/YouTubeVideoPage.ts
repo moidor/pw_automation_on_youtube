@@ -3,15 +3,29 @@ import { Browser, expect, Page } from '@playwright/test';
 export class YouTubeVideoPage{
   constructor(private page: Page, private browser: Browser) {}
 
+  // Functions about the POM
+  async checkVideoError(page: Page, videoTitle: string) {
+    const errorMessage = page.getByText('Something went wrong. Refresh');
+    const isVisible = await errorMessage.isVisible().catch(() => false);
+    if (isVisible) {
+      console.log(`
+        ❌ YouTube Error: "Something went wrong. Refresh..."
+        ━━━━━━━━━━━━━━━━━━
+        🎬 Video title:
+        ➡️  ${videoTitle}`);
+      // The test continues in spite of the detected error
+      await expect.soft(errorMessage).toBeVisible();
+      return true;
+    }
+    return false;
+  }
+
   async durationToMilliseconds(duration: string) {
     const parts = duration.split(':').map(Number);
-
     if (parts.some(Number.isNaN)) {
       throw new Error(`Invalid duration format: ${duration}`);
     }
-
     let totalSeconds = 0;
-
     if (parts.length === 2) {
       const [minutes, seconds] = parts;
       totalSeconds = minutes * 60 + seconds;
@@ -21,7 +35,6 @@ export class YouTubeVideoPage{
     } else {
       throw new Error(`Unsupported duration format: ${duration}`);
     }
-
     return totalSeconds * 1000;
   }
 
@@ -63,7 +76,12 @@ export class YouTubeVideoPage{
   async setQuality(quality: string) {
     await this.page.getByLabel('YouTube Video Player').getByLabel('Settings').click();
     await this.page.getByRole('menuitem', { name: 'Quality' }).locator('div').first().click();
-    await this.page.getByText(quality).click();
+    if (quality) {
+      await this.page.getByText(quality).click();
+    } else {
+      console.log(`This quality '${quality}' does not exist for this video. The 144p quality is now applied.`);
+      await this.page.getByText('144p').click();
+    }
   }
 
   async timeout(timeoutValue: number) {
@@ -77,6 +95,13 @@ export class YouTubeVideoPage{
     } else if (action === 'pause') {
       await this.page.keyboard.press('k');
     }
+  }
+
+  // ASSERTIONS :
+  // Assertions about checking the presence of searched video on the results page
+  async expectVideoToBePresentInResults(videoTitle: string) {
+    const videoCard = this.page.getByTitle(videoTitle);
+    await expect(videoCard).toBeVisible();
   }
 
   // Assertions about video player

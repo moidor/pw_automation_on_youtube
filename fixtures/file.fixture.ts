@@ -8,7 +8,7 @@ type FileFixtures = {
 
 export const fileReader = base.extend<FileFixtures>({
   fileLines: async ({}, use) => {
-    const filePath = 'data/my-file.txt'; // adapte le chemin
+    const filePath = 'data/my-file.txt';
 
     const lines = await readFileStream(filePath);
 
@@ -38,7 +38,7 @@ type ScenarioFixtures = {
 export const jsonFileReading = base.extend<ScenarioFixtures>({
   scenarii: async ({}, use) => {
     const data = JSON.parse(
-      fs.readFileSync('data/scenarii.json', 'utf-8')
+      fs.readFileSync('data/scenarii_2.json', 'utf-8')
     ) as Scenario[];
 
     await use(data);

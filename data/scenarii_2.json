@@ -2,7 +2,7 @@
   {
     "search": "whale",
     "videoTitle": "Whale jumps out of nowhere during sight seeing tour.(almost hits boat)",
-    "duration": "1:19",
+    "duration": "1:18",
     "actions": [
       { "type": "mute" },
       { "type": "timeout", "value": 2000 },
