@@ -48,6 +48,8 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
     await home.goto();
     await home.searchFor(scenario.search);
     await video.openFirstVideo(scenario.videoTitle);
+    video.expectPlayerVisible();
+    video.expectVideoTitleVisible(scenario.videoTitle);
 
     const videoDurationSection = page.getByText(`:00 / ${scenario.duration}Live`);
     const skipAdButton = page.getByRole('button', { name: 'Skip', exact: true });
@@ -80,7 +82,7 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
           timeout: videoDurationInMs,
         });
 
-        throw new Error('Erreur YouTube détectée pendant la lecture');
+        throw new Error('Error message displayed on the video player...');
       } catch (error) {
         if (error instanceof errors.TimeoutError) {
           return;
@@ -91,11 +93,15 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
 
     // Execution of the actions with the error message watcher
     if (await videoDurationSection.isVisible()) {
+      // video.expectResultsPage();
+      // video.expectSearchTermInUrl();      
       await Promise.all([
         executeActions(video, scenario.actions),
         watchForErrorDuringVideo(await videoDurationInMs)
       ]);
     } else if (await skipAdButton.isVisible()) {
+      // video.expectResultsPage();
+      // video.expectSearchTermInUrl();
       await skipAdButton.click();
       await Promise.all([
         executeActions(video, scenario.actions),
@@ -103,6 +109,8 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
       ]);
     } else {
       console.log('None clear detected state, we finally execute the actions.');
+      // video.expectResultsPage();
+      // video.expectSearchTermInUrl();
       await Promise.all([
         executeActions(video, scenario.actions),
         watchForErrorDuringVideo(await videoDurationInMs)

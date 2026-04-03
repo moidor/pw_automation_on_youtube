@@ -1,5 +1,4 @@
 import { Browser, expect, Page } from '@playwright/test';
-import { Context } from 'vm';
 
 export class YouTubeVideoPage{
   constructor(private page: Page, private browser: Browser) {}
@@ -80,8 +79,28 @@ export class YouTubeVideoPage{
     }
   }
 
-  async whenStoppingVideo() {
+  // Assertions about video player
+  async expectVideoPageOpened() {
+    await expect(this.page).toHaveURL(/watch/);
+  }
 
+  async expectVideoTitleVisible(title: string) {
+    // await expect(this.page.getByText(title, { exact: false })).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: title, exact: false })).toBeVisible();
+  }
+
+  async expectPlayerVisible() {
+    const player = this.page.locator('#movie_player');
+    await expect(player).toBeVisible();
+  }
+
+  // Assertions about the URL containing the search query and results string
+  async expectResultsPage() {
+    await expect(this.page).toHaveURL('/\/results/');
+  }
+
+  async expectSearchTermInUrl() {
+    await expect(this.page).toHaveURL(/search_query=/);
   }
 
 }
