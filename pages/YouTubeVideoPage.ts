@@ -50,27 +50,8 @@ export class YouTubeVideoPage{
     await this.page.keyboard.press('m');
   }
 
-  async openFirstVideo(videoTitle: string) {
+  async openSearchedVideo(videoTitle: string) {
     await this.page.getByTitle(videoTitle).click();
-  }
-
-  async openVideoRandomly() {
-    // Looping over the first five results to get a random element
-    // const results = await page.locator('#dismissible').all();
-    // Display in the console each video's title
-    const firstFiveResultsText = (await this.page.locator('#items #dismissible #video-title').allInnerTexts()).slice(0,5);
-    expect(firstFiveResultsText).not.toBeNull();
-    console.log(firstFiveResultsText);
-  
-    // Select a random value in the list
-    const firstFiveResults = (await this.page.locator('#items #dismissible #video-title').all()).slice(0,5);
-    const elementsList: any = Object.keys(firstFiveResults);
-    const randomIndex = Math.floor(Math.random() * elementsList.length);
-    const randomObject = firstFiveResults[elementsList[randomIndex]];
-    const randomObjectName = await randomObject.innerText();
-    console.log(`Name of the selected video: '${randomObjectName}'.`);
-    await expect(randomObject).not.toBeEmpty();
-    await randomObject.click();
   }
 
   async setQuality(quality: string) {
@@ -105,32 +86,52 @@ export class YouTubeVideoPage{
   }
 
   // Assertions about video player
-  async expectVideoPageOpened() {
+  async videoPlayerAssertions(title: string) {
+    // Expecting the URL to match "/watch/" and to contain its title in the tab
     await expect(this.page).toHaveURL(/watch/);
-  }
-
-  async expectVideoTitleVisible(title: string) {
-    // await expect(this.page.getByText(title, { exact: false })).toBeVisible();
+    // await expect(this.page).toHaveTitle(/title/);
+    // Expecting video title visible under the player
     await expect(this.page.getByRole('heading', { name: title, exact: false })).toBeVisible();
+    // Expecting video player to be visible
+    const player = this.page.locator('#movie_player');
+    await expect(player).toBeVisible();    
   }
 
-  async expectPlayerVisible() {
-    const player = this.page.locator('#movie_player');
-    await expect(player).toBeVisible();
-  }
+  // async expectVideoPageOpened() {
+  //   await expect(this.page).toHaveURL(/watch/);
+  // }
+
+  // async expectVideoTitleVisibleBelowPlayer(title: string) {
+  //   // await expect(this.page.getByText(title, { exact: false })).toBeVisible();
+  //   await expect(this.page.getByRole('heading', { name: title, exact: false })).toBeVisible();
+  // }
+
+  // async expectPlayerVisible() {
+  //   const player = this.page.locator('#movie_player');
+  //   await expect(player).toBeVisible();
+  // }
 
   // Assertions about the URL containing the search query and results string
-  async fullAssertionsAboutUrl() {
-    await this.expectResultsPage();
-    await this.expectSearchTermInUrl();
+  async urlAssertionsInSearchResults() {
+    await expect(this.page).toHaveURL(url => {
+      return (
+      url.pathname.includes('/results') && url.searchParams.has('search_query')
+      );
+    });
   }
+  
+  // Another way to assert URLs
+  // async allUrlAssertions() {
+  //   await this.expectResultsPage();
+  //   await this.expectSearchTermInUrl();
+  // }
 
-  async expectResultsPage() {
-    await expect(this.page).toHaveURL(/results/);
-  }
+  // async expectResultsPage() {
+  //   await expect(this.page).toHaveURL(/results/);
+  // }
 
-  async expectSearchTermInUrl() {
-    await expect(this.page).toHaveURL(/search_query=/);
-  }
+  // async expectSearchTermInUrl() {
+  //   await expect(this.page).toHaveURL(/search_query=/);
+  // }
 
 }

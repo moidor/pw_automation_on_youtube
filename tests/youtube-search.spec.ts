@@ -48,8 +48,8 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
     await home.goto();
     await home.searchFor(scenario.search);
     video.expectVideoToBePresentInResults(scenario.videoTitle);
-    video.fullAssertionsAboutUrl();
-    await video.openFirstVideo(scenario.videoTitle);
+    video.urlAssertionsInSearchResults();
+    await video.openSearchedVideo(scenario.videoTitle);
     
 
     // MEME FONCTION MAIS AVEC UN MOT DANS LE JDD JSON POUR APPLIQUER UN TEMPS DE LECTURE DE 21 SECONDES (TESTER PUB 15 SECS DE SUBWAY)
@@ -61,10 +61,12 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
     // Management of the ad before the selected video
     try {
       await Promise.race([
-        video.expectPlayerVisible(),
-        video.expectVideoTitleVisible(scenario.videoTitle),
+        // video.expectPlayerVisible(),
+        // video.expectVideoTitleVisibleBelowPlayer(scenario.videoTitle),
+        // video.hasATitle(scenario.videoTitle);
         videoDurationSection.waitFor({ state: 'visible', timeout: 30000 }),
         skipAdButton.waitFor({ state: 'visible', timeout: 30000 }),
+        video.videoPlayerAssertions(scenario.videoTitle)
       ]);
     } catch {
       console.log('None detected video or ad.');
@@ -97,16 +99,12 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
     // Execution of the actions with the error message watcher and a 5-second timeout to make the video duration section visible
     await page.waitForTimeout(5000);
     if (await videoDurationSection.isVisible()) {
-      // video.expectResultsPage();
-      // video.expectSearchTermInUrl();
       console.log('The video duration section in the player is visible.');
       await Promise.all([
         executeActions(video, scenario.actions),
         watchForErrorDuringVideo(await videoDurationInMs)
       ]);
     } else if (await skipAdButton.isVisible()) {
-      // video.expectResultsPage();
-      // video.expectSearchTermInUrl();
       console.log('The skip button is visible and is going to be clicked.');
       await skipAdButton.click();
       await expect(skipAdButton).toBeHidden({ timeout: 2000 });
@@ -116,8 +114,6 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
       ]);
     } else {
       console.log('None clear detected state, we finally execute the actions.');
-      // video.expectResultsPage();
-      // video.expectSearchTermInUrl();
       await Promise.all([
         executeActions(video, scenario.actions),
         watchForErrorDuringVideo(await videoDurationInMs)
