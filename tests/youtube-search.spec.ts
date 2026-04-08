@@ -60,10 +60,10 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
 
     // Management of the ad before the selected video
     try {
+      if (await videoDurationSection.isHidden()) {
+        video.mute();
+      };
       await Promise.race([
-        // video.expectPlayerVisible(),
-        // video.expectVideoTitleVisibleBelowPlayer(scenario.videoTitle),
-        // video.hasATitle(scenario.videoTitle);
         videoDurationSection.waitFor({ state: 'visible', timeout: 30000 }),
         skipAdButton.waitFor({ state: 'visible', timeout: 30000 }),
         video.videoPlayerAssertions(scenario.videoTitle)

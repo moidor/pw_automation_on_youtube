@@ -94,7 +94,7 @@ export class YouTubeVideoPage{
     await expect(this.page.getByRole('heading', { name: title, exact: false })).toBeVisible();
     // Expecting video player to be visible
     const player = this.page.locator('#movie_player');
-    await expect(player).toBeVisible();    
+    await expect(player).toBeVisible();
   }
 
   // async expectVideoPageOpened() {
