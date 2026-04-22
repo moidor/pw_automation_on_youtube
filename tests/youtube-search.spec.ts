@@ -4,11 +4,6 @@ import { test, expect } from '../fixtures/ytHomePage.fixture';
 import { YouTubeHomePage } from '../pages/YouTubeHomePage';
 import { YouTubeVideoPage } from '../pages/YouTubeVideoPage';
 
-// Describe pour appeler le fichier texte via un stream et ensuite rechercher dans le test "search for a Playwright video" ?
-// test.use({
-//       locale: 'fr-FR',
-//     });
-
 test('search for a Playwright video', async ({ youtubePage }) => {
   await youtubePage.searchFor('Playwright tutorial');
   await youtubePage.expectResultsPage();
