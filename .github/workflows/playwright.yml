@@ -35,8 +35,8 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run Playwright tests on Chromium without cookie setup
-        run: npx playwright test tests/youtube-search.spec.ts tests/test-1.spec.ts --project=chromium
+      - name: Run Playwright tests on Chromium
+        run: npx playwright test --project=chromium
 
       - name: Upload Playwright HTML report
         if: always()
