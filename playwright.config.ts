@@ -45,13 +45,13 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    // {
-    //   name: 'setup',
-    //   testMatch: /.*\.setup\.ts/,
-    // },
+    {
+      name: 'setup',
+      testMatch: /.*\.setup\.ts/,
+    },
     {
       name: 'chromium',
-      // dependencies: ['setup'],
+      dependencies: ['setup'],
       use: { 
         ...devices['Desktop Chrome'], 
         permissions: ['clipboard-read'],
@@ -61,7 +61,7 @@ export default defineConfig({
 
     {
       name: 'firefox',
-      // dependencies: ['setup'],
+      dependencies: ['setup'],
       use: { 
         ...devices['Desktop Firefox'],
         permissions: ['clipboard-read'],

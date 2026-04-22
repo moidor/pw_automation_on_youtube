@@ -15,5 +15,5 @@
     "pages/**/*.ts",
     "fixtures/**/*.ts",
     "utils/**/*.ts"
-, "scripts/cookies.setup_old.ts"  ]
+, "tests/cookies.setup.ts"  ]
 }
