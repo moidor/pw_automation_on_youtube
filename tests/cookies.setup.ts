@@ -9,7 +9,7 @@ setup('handle cookies', async ({ page, context }) => {
 
   await page.goto('/');
   // Reject all cookies
-  await page.getByRole('button', { name: 'Accept' }).click();
+  await page.getByRole('button', { name: 'Reject' }).click();
   // const rejectCookiesButton = page.getByRole('button', { name: 'Reject' });
   // if (await rejectCookiesButton.isVisible().catch(() => false)) {
   //   rejectCookiesButton.click();
