@@ -19,9 +19,4 @@ export class YouTubeHomePage {
   async expectResultsPage() {
     await expect(this.page).toHaveURL(/results/);
   }
-
-  // API ?
-  async expectResultsApiCode200() {
-    // await expect(this.page).toBe()
-  }
 }

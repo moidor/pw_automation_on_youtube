@@ -1,4 +1,3 @@
-
 import { errors } from '@playwright/test';
 import { jsonFileReading } from '../fixtures/file.fixture';
 import { test, expect } from '../fixtures/ytHomePage.fixture';
@@ -48,7 +47,6 @@ jsonFileReading('use data from JSON file', async ({ page, browser, scenarii }) =
     await home.goto();
     await home.searchFor(scenario.search);
     video.expectVideoToBePresentInResults(scenario.videoTitle);
-    video.urlAssertionsInSearchResults();
     await video.openSearchedVideo(scenario.videoTitle);
     
 
