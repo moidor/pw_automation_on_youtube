@@ -97,10 +97,6 @@ export class YouTubeVideoPage{
     await expect(player).toBeVisible();
   }
 
-  // async expectVideoPageOpened() {
-  //   await expect(this.page).toHaveURL(/watch/);
-  // }
-
   // async expectVideoTitleVisibleBelowPlayer(title: string) {
   //   // await expect(this.page.getByText(title, { exact: false })).toBeVisible();
   //   await expect(this.page.getByRole('heading', { name: title, exact: false })).toBeVisible();
