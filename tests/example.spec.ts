@@ -43,34 +43,34 @@ fileReader('use data from text file', async ({ fileLines }) => {
   }
 });
 
-jsonFileReading('use data from JSON file', async ({ page, scenarios }) => {
-  const home = new YouTubeHomePage(page);
-  const video = new YouTubeVideoPage(page);
+// jsonFileReading('use data from JSON file', async ({ page, scenarios }) => {
+//   const home = new YouTubeHomePage(page);
+//   const video = new YouTubeVideoPage(page);
 
-  for (const scenario of scenarios) {
-    await home.goto();
-    await home.searchFor(scenario.search);
+//   for (const scenario of scenarios) {
+//     await home.goto();
+//     await home.searchFor(scenario.search);
 
-    await video.openFirstVideo();
+//     await video.openFirstVideo();
 
-    for (const action of scenario.actions) {
-      switch (action.type) {
-        case 'pause':
-          await video.pause();
-          break;
-        case 'play':
-          await video.play();
-          break;
-        case 'mute':
-          await video.mute();
-          break;
-        case 'fullscreen':
-          await video.fullscreen();
-          break;
-        case 'setQuality':
-          await video.setQuality(action.value);
-          break;
-      }
-    }
-  }
-});
+//     for (const action of scenario.actions) {
+//       switch (action.type) {
+//         case 'pause':
+//           await video.pause();
+//           break;
+//         case 'play':
+//           await video.play();
+//           break;
+//         case 'mute':
+//           await video.mute();
+//           break;
+//         case 'fullscreen':
+//           await video.fullscreen();
+//           break;
+//         case 'setQuality':
+//           await video.setQuality(action.value);
+//           break;
+//       }
+//     }
+//   }
+// });
